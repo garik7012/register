@@ -3,10 +3,9 @@
 
 class IndexController
 {
-//отображение стартовой страницы
+//отображение стартовой страницы. По заданию она нам не нужна, делаем редирект на регистрацию
     function index()
     {
-        require_once(ROOT . '/views/index.php');
-        return true;
+        header('Location: /user/register');
     }
 }

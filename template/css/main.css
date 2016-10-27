@@ -1,3 +1,38 @@
 body{
     background-color: #daebfd;
 }
+.navbar-blue{
+    background-image: -webkit-linear-gradient(top, #83a1bf, #094581);
+    background-image: -moz-linear-gradient(top, #83a1bf, #094581);
+    background-image: -o-linear-gradient(top, #83a1bf, #094581);
+    background-image: -ms-linear-gradient(top, #83a1bf, #094581);
+    color: white;
+}
+
+.select_day select{
+    min-width: 100px;
+}
+.select_month select{
+    min-width: 130px;
+}
+.select_year select{
+    min-width: 80px;
+}
+.select_month{
+    margin-right: 13%;
+}
+.select_day{
+    margin-right: 13%;
+}
+.select_year{
+    margin-right: 13%;
+}
+.errorSpan{
+    margin-bottom: 0;
+}
+#gender + .errorSpan{
+margin-left: 3%;
+}
+#user_avatar{
+    margin-top: 7px;
+}

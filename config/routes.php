@@ -3,11 +3,10 @@
 return array(
 
     //путь => контроллер@action
-
-    '' => 'IndexController@index',  
-
     'user/register' => 'UserController@register',
-    'user/login' => 'UserController@login',
+    'user/cabinet' => 'UserController@showCabinet',
     'user/logout' => 'UserController@logout',
+    '' => 'IndexController@index',
+
 
 );
