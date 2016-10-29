@@ -42,7 +42,9 @@ class UserController
       // Получаем идентификатор пользователя из сессии
          $userId = User::checkLogged();
       // Получаем информацию о пользователе из БД
-         $user = User::getUserById($userId);
+         global $user;
+        $user = User::getUserById($userId);
+        $params = include(ROOT . '/config/config.php');
 
       //Создаем массив, в который будем складывать ошибки
         $errors = [];
@@ -69,12 +71,20 @@ class UserController
             if(isset($_POST['phoneNumber'])){
                 $this->checkPhoneNumber($errors, $phoneNumber);
             }
-            $avatar = '';
+            isset($user['avatar']) ? $avatar = $user['avatar'] : $avatar = '';
+            $maxSize = $params['max_size'];
             if(is_file($_FILES['avatar']['tmp_name'])){
-                $this->checkAndSaveAvatar($errors, $avatar);
+                $this->checkAndSaveAvatar($errors, $avatar, $maxSize);
+            } 
+            if(isset($_POST['deleteAvatar'])) {
+                unlink(ROOT . $user['avatar']);
+                $avatar = '';
             }
+
+            //если ошибок нет - обновляем данные пользователя
             if ($errors == false) {
-                User::edit($userId, $name, $lastName, $phoneNumber, $gender, $b_date, $description, $avatar) ? header('Location: /user/cabinet'): exit('Ошибка регистрации');
+                $userId = $user['id'];
+                User::edit($userId, $name, $lastName, $phoneNumber, $gender, $b_date, $description, $avatar, $city) ? header('Location: /user/cabinet'): exit('Ошибка регистрации');
             }
 
             require_once(ROOT . '/views/user/cabinet.php');
@@ -152,14 +162,13 @@ class UserController
         } else $city = $_POST['city'];
     }
 
-    private function checkAndSaveAvatar(&$errors, &$avatar){
+    private function checkAndSaveAvatar(&$errors, &$avatar, $maxSize){
         // Пути загрузки файлов
      $path = '/template/users/avatars/';
-
         // Массив допустимых значений типа файла
      $types = array('image/gif', 'image/png', 'image/jpeg');
         // Максимальный размер файла
-     $size = 2097000;
+     $size = $maxSize;
  // Обработка запроса
         // Проверяем тип файла
       if (!in_array($_FILES['avatar']['type'], $types)) {
@@ -180,13 +189,14 @@ class UserController
             $target = ROOT . $path . $fileName; // путь для загрузки файла
             //если ошибок не было то пермещаем файл и сразу проверяем удачно ли
             if($errors == false and move_uploaded_file($_FILES['avatar']['tmp_name'], $target)){
+                unlink(ROOT . $avatar);
                 $avatar = $path . $fileName;               
                 @unlink($_FILES['avatar']['tmp_name']); // удаляем временный файл
+                
             }
         }else{
             $errors['avatar'] = 'Ошибка при загрузке файла';
         }
 
     }
-
 }

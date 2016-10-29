@@ -33,6 +33,19 @@ body{
 #gender + .errorSpan{
 margin-left: 3%;
 }
-#user_avatar{
+.field_avatar{
     margin-top: 7px;
+}
+#deleteAvatar{
+    margin-top: 17px;
+}
+label[for='deleteAvatar']{
+    position: relative;
+    top: -2px;
+}
+.form-title{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 18px;
+    font-weight: 500;
 }

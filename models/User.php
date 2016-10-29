@@ -15,18 +15,17 @@ class User
      * @param type $password
      * @return type
      */
-    public static function register($name, $email, $password,  $sex, $bday)
+    public static function register($name, $email, $password,  $gender, $b_date)
     {
         $db = Db::getConnection();
-        $sql = 'INSERT INTO users (name, email, password,  sex, bday) '
-            . 'VALUES (:name, :email, :password, :sex, :bday)';
-
+        $sql = 'INSERT INTO users (name, email, password, gender, b_date) '
+            . 'VALUES (:name, :email, :password, :gender, :b_date)';
         $result = $db->prepare($sql);
         $result->bindParam(':name', $name, PDO::PARAM_STR);
         $result->bindParam(':email', $email, PDO::PARAM_STR);
         $result->bindParam(':password', $password, PDO::PARAM_STR);
-        $result->bindParam(':sex', $sex, PDO::PARAM_STR);
-        $result->bindParam(':bday', $bday, PDO::PARAM_STR);
+        $result->bindParam(':gender', $gender, PDO::PARAM_STR);
+        $result->bindParam(':b_date', $b_date, PDO::PARAM_STR);
         if($result->execute()){
             $_SESSION['user'] = $db->lastInsertId();
             return true;
@@ -38,18 +37,24 @@ class User
      * @param string $name
      * @param string $password
      */
-    public static function edit($id, $name, $lastName, $phoneNumber, $gender, $b_date, $description, $avatar)
+    public static function edit($id, $name, $lastName, $phoneNumber, $gender, $b_date, $description, $avatar, $city)
     {
         $db = Db::getConnection();
 
-        $sql = "UPDATE user 
-            SET name = :name, password = :password 
+        $sql = "UPDATE users 
+            SET name = :name, lastName = :lastName, phoneNumber = :phoneNumber, gender = :gender, b_date = :b_date, description = :description, avatar = :avatar, city = :city 
             WHERE id = :id";
 
         $result = $db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
         $result->bindParam(':name', $name, PDO::PARAM_STR);
-        $result->bindParam(':password', $password, PDO::PARAM_STR);
+        $result->bindParam(':lastName', $lastName, PDO::PARAM_STR);
+        $result->bindParam(':phoneNumber', $phoneNumber, PDO::PARAM_STR);
+        $result->bindParam(':gender', $gender, PDO::PARAM_STR);
+        $result->bindParam(':b_date', $b_date, PDO::PARAM_STR);
+        $result->bindParam(':description', $description, PDO::PARAM_STR);
+        $result->bindParam(':avatar', $avatar, PDO::PARAM_STR);
+        $result->bindParam(':city', $city, PDO::PARAM_STR);
         return $result->execute();
     }
 
@@ -74,7 +79,6 @@ class User
         if ($user) {
             return $user['id'];
         }
-
         return false;
     }
 
@@ -94,7 +98,6 @@ class User
         if (isset($_SESSION['user'])) {
             return $_SESSION['user'];
         }
-
         header("Location: /user/login");
     }
 
@@ -106,38 +109,10 @@ class User
         return true;
     }
 
-    /**
-     * Проверяет имя: не меньше, чем 2 символа
-     */
-    public static function checkName($name)
-    {
-        if (strlen($name) >= 2) {
-            return true;
-        }
-        return false;
-    }
 
-    /**
-     * Проверяет имя: не меньше, чем 6 символов
-     */
-    public static function checkPassword($password)
-    {
-        if (strlen($password) >= 6) {
-            return true;
-        }
-        return false;
-    }
 
-    /**
-     * Проверяет email
-     */
-    public static function checkEmail($email)
-    {
-        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return true;
-        }
-        return false;
-    }
+
+
 
     public static function checkEmailExists($email)
     {

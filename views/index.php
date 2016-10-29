@@ -9,7 +9,16 @@
             <div class="row">
                 <div class="col-md-9 col-md-offset-1">
                     <div class="panel panel-default">
-                        <div class="panel-heading">Регистрация</div>
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="panel-title form-title col-sm-7 col-sm-offset-1">Регистрация нового пользователя</div>
+                                <div class=" col-sm-4">
+                                    <a href="#" class="btn active" role="button">Рус</a>
+                                    <a href="#" class="btn" role="button">Eng</a>
+                                    <a href="/user/login" class="btn btn-primary" role="button">Войти</a>
+                                </div>
+                            </div>
+                        </div>
                         <div class="panel-body">
                             <form class="form-horizontal" role="form" method="POST" action="/user/register">
                                 <div class="form-group">
