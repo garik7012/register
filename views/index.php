@@ -13,8 +13,8 @@
                             <div class="row">
                                 <div class="panel-title form-title col-sm-7 col-sm-offset-1">Регистрация нового пользователя</div>
                                 <div class=" col-sm-4">
-                                    <a href="#" class="btn active" role="button">Рус</a>
-                                    <a href="#" class="btn" role="button">Eng</a>
+                                    <a href="rus" lang = 'rus' class="btn lang <?php if($_SESSION['lang'] == 'rus') echo 'active'?>" role="button">Рус</a>
+                                    <a href="eng" lang = 'eng' class="btn lang <?php if($_SESSION['lang'] == 'eng') echo 'active'?>" role="button">Eng</a>
                                     <a href="/user/login" class="btn btn-primary" role="button">Войти</a>
                                 </div>
                             </div>

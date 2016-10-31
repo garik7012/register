@@ -1,13 +1,14 @@
 $(document).ready(function() {
-    $("forms").submit(function(){
+    $("form").submit(function(){
         var errors = false;
+        var err;
         //при повторной отправке удаляем все ошибки
         $('.errorSpan').remove();
         $('.has-error').removeClass('has-error');
         //создаем поле для вывода ошибок. его будем клонировать
         errorField = $('<span class="errorSpan help-block"><strong></strong></span>');
         //проверка введенного имени
-        var err = checkName('name');
+        err = checkName('name');
         if(err){
          showError('name', err);
         }
@@ -18,12 +19,13 @@ $(document).ready(function() {
                 showError('lastName', err);
             }
         }
-        //проверка email
-        var email = $('#email').val();
+        //проверка email, когда это поле есть
+        if($('#email').length) {
+            var email = $('#email').val();
             emailReg = /^[\w]{1}[\w-\.]*@[\w-]+\.[a-z]{2,4}$/i;
-        if(!emailReg.test(email) || email == '')
-        {
-            showError('email', "Пожалуйста, введите ваш e-mail");
+            if (!emailReg.test(email) || email == '') {
+                showError('email', "Пожалуйста, введите ваш e-mail");
+            }
         }
         //проверка телефона
         if($('#phoneNumber').length){
@@ -35,7 +37,6 @@ $(document).ready(function() {
                 showError('phoneNumber', "Пожалуйста, введите корректный номер");
             }
         }
-
         //проверка пароля, когда это поле есть
         if($('#password').length) {
             var pwd1 = $('#password').val();
@@ -53,7 +54,7 @@ $(document).ready(function() {
             }
         }
         //проверка выбора пола
-        if(!$('input[name=gender]:checked', '#gender').val()){
+        if(!$('input[name=gender]:checked').val()){
             showError("gender", 'укажите ваш пол');
         }
         //проверка корректности даты
@@ -63,13 +64,14 @@ $(document).ready(function() {
             $('#brthd .row').append(errorField);
             $('#brthd').addClass('has-error');
         }
-        //если ошибоки есть -  данные на сервер не отправляем
-        if(errors) return false;
-
+        //если ошибок нет - отправляем, если ошибки есть -  данные на сервер не отправляем
+        alert(errors);
+        if(!errors) {
+            return true;
+        } else return false;
 
         //Проверочные функции
         function checkName(field) {
-            var err = [];
             var name = $('#' + field).val();
             var reg = /^[а-яА-ЯёЁa-zA-Z -]+$/;
             if(name.length < 2 && field != 'lastName') return "Не менее 2-х символов";
@@ -79,12 +81,31 @@ $(document).ready(function() {
         }
         //выводим ошибки
         function showError(fieldName, err) {
-            errors = true;
             eF = errorField.clone();
             eF.children().text(err);
             $('#' + fieldName).after(eF);
             $('#' + fieldName).parent().addClass('has-error');
+            errors = true;
+            alert(err)
         }
+
+    });
+
+    //переключение языка формы
+    $('.lang').click(function () {
+        var lang = $(this).prop("lang");
+        $.ajax({
+            url: '/user/cabinet/' + lang,
+            type: "POST",
+            data: {lang: lang},
+            success: function(){
+                window.location.reload();
+            },
+            error: function(msg){
+                console.log(msg);
+            }
+        });
+       return false;
     });
 
 //дата рождения. выбор правильной даты. красивый выбор даты
