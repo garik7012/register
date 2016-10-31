@@ -17,4 +17,12 @@ class Lang
         }    
         
     }
+
+    public static function getAllGroupFields($group){
+        $languagesPath = ROOT . '/config/languages/langRuEn.php';
+        include($languagesPath);
+        if(key_exists($group, $languages)){
+            return($languages[$group]);
+        }
+    }
 }

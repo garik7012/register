@@ -45,7 +45,7 @@
                             <div class="col-sm-4">
                                 <a href="rus" lang = 'rus' class="btn lang <?php if($_SESSION['lang'] == 'rus') echo 'active'?>" role="button">Рус</a>
                                 <a href="eng" lang = 'eng' class="btn lang <?php if($_SESSION['lang'] == 'eng') echo 'active'?>" role="button">Eng</a>
-                                <a href="#" class="btn btn-primary" role="button"><?= Lang::_('buttons', 'logout') ?></a>
+                                <a href="/user/logout" class="btn btn-primary" role="button"><?= Lang::_('buttons', 'logout') ?></a>
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
 
                         <form class="form-horizontal" method="post" enctype=multipart/form-data action="/user/cabinet">
                             <div class="form-group">
-                                <label class="control-label col-xs-3" for="name"><?= Lang::_('fields', 'name'); ?></label>
+                                <label class="control-label col-xs-3" for="name"><?= Lang::_('fields', 'name') ?></label>
                                 <div class="col-xs-9 col-sm-8 <?php if(array_key_exists('name', $errors)) echo 'has-error';?>">
                                     <input type="text" class="form-control" id="name" name="name"
                                            placeholder="<?= Lang::_('placeholders', 'name'); ?>" value="<?php showValue('name'); ?>">
@@ -173,9 +173,9 @@
                             <br/>
                             <div class="form-group">
                                 <div class="col-xs-offset-3 col-xs-9">
-                                    <input type="submit" class="btn btn-primary" value="<?= Lang::_('inputs', 'submit2')?>"
+                                    <input type="submit" class="btn btn-primary" value="<?= Lang::_('buttons', 'submit2')?>"
                                            name="updateInfo">
-                                    <input type="reset" class="btn btn-default" value="<?= Lang::_('inputs', 'cancel')?>">
+                                    <input type="reset" class="btn btn-default" value="<?= Lang::_('buttons', 'cancel')?>">
                                 </div>
                             </div>
                         </form>

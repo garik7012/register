@@ -1,4 +1,20 @@
 $(document).ready(function() {
+    var errorsText;
+    if(!errorsText){
+        var lang = $('.lang').filter('.active').prop('lang');
+        if(lang == 'rus'){lang = 0}else if(lang == 'eng'){lang = 1}
+        $.ajax({
+        url: '/language/geterrors/',
+        type: "POST",
+        data: {lang: lang},    
+        success: function(arr){
+            errorsText = JSON.parse(arr);
+        },
+        error: function(msg){
+            console.log(msg);
+        }
+    });
+    }
     $("form").submit(function(){
         var errors = false;
         var err;
@@ -24,7 +40,7 @@ $(document).ready(function() {
             var email = $('#email').val();
             emailReg = /^[\w]{1}[\w-\.]*@[\w-]+\.[a-z]{2,4}$/i;
             if (!emailReg.test(email) || email == '') {
-                showError('email', "Пожалуйста, введите ваш e-mail");
+                showError('email', errorsText['email']);
             }
         }
         //проверка телефона
@@ -34,14 +50,14 @@ $(document).ready(function() {
             //проверяем только если был введен
             if(phone != '' && !regV.test(phone))
             {
-                showError('phoneNumber', "Пожалуйста, введите корректный номер");
+                showError('phoneNumber', errorsText['phoneNumber_reg']);
             }
         }
         //проверка пароля, когда это поле есть
         if($('#password').length) {
             var pwd1 = $('#password').val();
-            if (pwd1.length < 7) showError('password', 'пароль должен быть длинее 6 символов');
-            if (pwd1.length > 30) showError('password', 'пароль не должен быть длинее 30 символов');
+            if (pwd1.length < 7) showError('password', errorsText['pwd_min']);
+            if (pwd1.length > 30) showError('password', errorsText['pwd_max']);
             /* подумав, решил оставить сложность пароля на пользователе. если надо, проверку на сложность можно всегда включить
              pwdReg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/;
              if(!pwdReg.test(pwd1)){
@@ -50,22 +66,21 @@ $(document).ready(function() {
             //проверка повторного ввода пароля
             var pwd2 = $('#password-confirm').val();
             if (pwd1 !== pwd2) {
-                showError("password-confirm", 'пароли не совпадают')
+                showError("password-confirm", errorsText['pwd-conf'])
             }
         }
         //проверка выбора пола
         if(!$('input[name=gender]:checked').val()){
-            showError("gender", 'укажите ваш пол');
+            showError("gender", errorsText['gender']);
         }
         //проверка корректности даты
         if(!checkDate()){
             errors = true;
-            errorField.children().text('Пожалуйста, выберите дату рождения');
+            errorField.children().text(errorsText['brthd']);
             $('#brthd .row').append(errorField);
             $('#brthd').addClass('has-error');
         }
         //если ошибок нет - отправляем, если ошибки есть -  данные на сервер не отправляем
-        alert(errors);
         if(!errors) {
             return true;
         } else return false;
@@ -74,9 +89,9 @@ $(document).ready(function() {
         function checkName(field) {
             var name = $('#' + field).val();
             var reg = /^[а-яА-ЯёЁa-zA-Z -]+$/;
-            if(name.length < 2 && field != 'lastName') return "Не менее 2-х символов";
-            if(name.length > 31) return "Не более 30 символов";
-            if(!reg.test(name)) return 'Только буквы русского и латинского алфавита, знак "-" (дефис), пробел';
+            if(name.length < 2 && field != 'lastName') return errorsText['name_min'];
+            if(name.length > 31) return errorsText['name_max'];
+            if(!reg.test(name) && name != '') return errorsText['name_reg'];
             return false;
         }
         //выводим ошибки
@@ -86,9 +101,7 @@ $(document).ready(function() {
             $('#' + fieldName).after(eF);
             $('#' + fieldName).parent().addClass('has-error');
             errors = true;
-            alert(err)
         }
-
     });
 
     //переключение языка формы

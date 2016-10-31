@@ -36,10 +36,10 @@ class UserController
             if ($errors == false) {
                User::register($name, $email, $password, $gender, $b_date) ? header('Location: /user/cabinet/'): exit(Lang::_('errors', 'register_err'));
             }
-            require_once(ROOT . '/views/index.php');
+            require_once(ROOT . '/views/user/register.php');
             return true;
         }
-        require_once(ROOT . '/views/index.php');
+        require_once(ROOT . '/views/user/register.php');
         return true;
     }
 
@@ -98,6 +98,46 @@ class UserController
             require_once(ROOT . '/views/user/cabinet.php');
             return true;
         }
+    
+    public function login(){
+        //Создаем массив, в который будем складывать ошибки
+        $errors = [];
+        if (isset($_POST['login'])) {
+            //Проверяем email адрес на корректность
+            if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+                $errors['email'] = Lang::_('errors', 'email_reg');
+            }else{
+                $email = $_POST['email'];
+                }
+            $password = trim($_POST['password']);
+            if($password == ''){$errors['password'] = Lang::_('errors, pwd');}
+            if ($errors == false) {
+                $password = md5(md5($password));
+                // Проверяем существует ли пользователь
+                $userId = User::checkUserData($email, $password);
+                echo $userId;
+                if ($userId == false) {
+                    // Если данные неправильные - показываем ошибку
+                    $errors[] = 'Неправильные данные для входа на сайт';                    
+                } else {
+                    // Если данные правильные, запоминаем пользователя (сессия)
+                    User::auth($userId);
+
+                    // Перенаправляем пользователя в закрытую часть - кабинет 
+                    header("Location: /user/cabinet/");
+                }
+            }
+            require_once(ROOT . '/views/user/login.php');
+            return true;
+        }
+        require_once(ROOT . '/views/user/login.php');
+        return true;
+    }
+    
+    public function logout(){
+        unset($_SESSION['user']);
+        header('Location: /user/register/');
+    }
 
 
 

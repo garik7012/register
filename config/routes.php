@@ -7,6 +7,8 @@ return array(
     'user/register' => 'UserController@register',
     'user/cabinet' => 'UserController@showCabinet',
     'user/logout' => 'UserController@logout',
+    'user/login' => 'UserController@login',
+    'language/geterrors' => 'IndexController@getErrors',
     'user' => 'UserController@index',
     '' => 'IndexController@index',
 );

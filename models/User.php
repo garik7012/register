@@ -9,11 +9,13 @@
 class User
 {
     /**
-     * Регистрация пользователя
-     * @param type $name
-     * @param type $email
-     * @param type $password
-     * @return type
+     * регистрация пользователя
+     * @param $name
+     * @param $email
+     * @param $password
+     * @param $gender
+     * @param $b_date
+     * @return bool
      */
     public static function register($name, $email, $password,  $gender, $b_date)
     {
@@ -33,9 +35,17 @@ class User
     }
 
     /**
-     * Редактирование данных пользователя
-     * @param string $name
-     * @param string $password
+     * редактирование/дополнение данных пользователя
+     * @param $id - идентификатор
+     * @param $name - имя
+     * @param $lastName - фамилия
+     * @param $phoneNumber - номер телефона
+     * @param $gender - пол
+     * @param $b_date - дата рождения
+     * @param $description - как пользователь описывает себя
+     * @param $avatar - веб ссылка на аватар пользователя
+     * @param $city - город
+     * @return bool
      */
     public static function edit($id, $name, $lastName, $phoneNumber, $gender, $b_date, $description, $avatar, $city)
     {
@@ -68,7 +78,7 @@ class User
     {
         $db = Db::getConnection();
 
-        $sql = 'SELECT * FROM user WHERE email = :email AND password = :password';
+        $sql = 'SELECT * FROM users WHERE email = :email AND password = :password';
 
         $result = $db->prepare($sql);
         $result->bindParam(':email', $email, PDO::PARAM_INT);
@@ -108,11 +118,6 @@ class User
         }
         return true;
     }
-
-
-
-
-
 
     public static function checkEmailExists($email)
     {
